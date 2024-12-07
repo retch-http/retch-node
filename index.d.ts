@@ -7,40 +7,22 @@ export const enum Browser {
   Chrome = 0,
   Firefox = 1
 }
-export interface RetcherNodeWrapperOptions {
-  impersonate?: Browser
+export interface RetcherOptions {
+  browser?: Browser
   ignoreTlsErrors?: boolean
-  fallback?: boolean
-  proxy?: string
+  vanillaFallback?: boolean
+  proxyUrl?: string
 }
-export const enum HttpMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-  PATCH = 'PATCH',
-  HEAD = 'HEAD',
-  OPTIONS = 'OPTIONS',
-  TRACE = 'TRACE'
-}
-export interface RequestInit {
-  headers?: Record<string, string>
-  method?: HttpMethod
-  body?: Buffer
-}
-export declare class NodeWrappedResponse {
+export declare class NapiResponseWrapper {
   status: number
+  statusText: string
   headers: Record<string, string>
   ok: boolean
-  redirected: boolean
-  type: string
-  url: string
-  statusText: string
-  bytes(): Promise<Buffer>
-  text(): Promise<string>
-  json(): Promise<any>
+  bytes(): Buffer
+  text(): string
+  json(): any
 }
-export declare class RetcherNodeWrapper {
-  constructor(options: RetcherNodeWrapperOptions)
-  retch(url: string, options?: RequestInit | undefined | null): Promise<NodeWrappedResponse>
+export declare class NodeRetcherWrapper {
+  constructor(options: RetcherOptions)
+  fetch(url: string): Promise<NapiResponseWrapper>
 }
