@@ -13,7 +13,6 @@ napi-derive = "2.12.2"
 retch = { git="https://github.com/retch-http/retch.git", branch="master" }
 rustls = { version="0.23.16" }
 tokio = { version="1.41.1", features = ["full"] }
-aws-lc-rs = { version = "1.11.1" }
 h2 = "0.4.7"
 reqwest = "0.12.9"
 
@@ -25,6 +24,7 @@ openssl = { version = "*", features = ["vendored"] }
 
 [target.aarch64-unknown-linux-gnu.dependencies]
 openssl = { version = "*", features = ["vendored"] }
+aws-lc-rs = { version = "1.11.1", features=["bindgen"] }
 
 [patch.crates-io]
 rustls = { git="https://github.com/retch-http/rustls.git", branch="retch-patch" }
