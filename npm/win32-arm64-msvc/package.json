@@ -1,6 +1,9 @@
 {
   "name": "retch-http-win32-arm64-msvc",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/retch-http/retch-node"
+  },
   "os": [
     "win32"
   ],
