@@ -2,10 +2,10 @@ use std::collections::HashMap;
 
 use napi::{bindgen_prelude::Buffer, Env, JsFunction, JsObject, JsString, JsUnknown};
 use reqwest::Response;
-use retch::retcher::{ Retcher, RetcherConfig};
+use retch::retcher::{ RequestOptions, Retcher, RetcherConfig};
 use napi_derive::napi;
 
-#[napi]
+#[napi(string_enum)]
 pub enum Browser {
   Chrome,
   Firefox,
@@ -20,6 +20,7 @@ impl Into<retch::Browser> for Browser {
   }
 }
 
+#[derive(Default)]
 #[napi(object)]
 struct RetcherOptions {
   pub browser: Option<Browser>,
@@ -80,6 +81,7 @@ impl RetchResponse {
 
   #[napi]
   pub fn text(&self) -> String {
+    // Support non-UTF-8 encodings (from the content-type header, the http-equiv meta tag, etc.)
     String::from_utf8_lossy(&self.bytes).to_string()
   }
 
@@ -104,20 +106,56 @@ pub struct RetcherWrapper {
   inner: Retcher,
 }
 
+#[derive(Default)]
+#[napi(string_enum)]
+pub enum HttpMethod {
+  #[default]
+  GET,
+  POST,
+  PUT,
+  DELETE,
+  PATCH,
+  HEAD,
+  OPTIONS,
+}
+
+#[derive(Default)]
+#[napi(object)]
+pub struct RequestInit {
+  pub method: Option<HttpMethod>,
+  pub headers: Option<HashMap<String, String>>,
+  pub body: Option<Vec<u8>>,
+}
+
 #[napi]
 impl RetcherWrapper {
     #[napi(constructor)]
-    pub fn new(options: RetcherOptions) -> Self {
-      let config: RetcherConfig = options.into();
+    pub fn new(options: Option<RetcherOptions>) -> Self {
+      let config: RetcherConfig = options.unwrap_or_default().into();
         Self {
           inner: config.build(),
         }
     }
 
     #[napi]
-    pub async fn fetch(&self, url: String) -> RetchResponse {
-      let response = self.inner.get(url, None).await.unwrap();
-      
+    pub async fn fetch(&self, url: String, request_init: Option<RequestInit>) -> RetchResponse {
+      let request_options = Some(RequestOptions {
+        headers: request_init.as_ref().and_then(|init| init.headers.as_ref()).cloned().unwrap_or_default(),
+      });
+
+      let body = request_init.as_ref().and_then(|init| init.body.as_ref()).cloned();
+
+      let response = match request_init.unwrap_or_default().method.unwrap_or_default() {
+        HttpMethod::GET => self.inner.get(url, request_options).await,
+        HttpMethod::POST => self.inner.post(url, body, request_options).await,
+        HttpMethod::PUT => self.inner.put(url, body, request_options).await,
+        HttpMethod::DELETE => self.inner.delete(url, request_options).await,
+        HttpMethod::PATCH => self.inner.patch(url, body, request_options).await,
+        HttpMethod::HEAD => self.inner.head(url, request_options).await,
+        HttpMethod::OPTIONS => self.inner.options(url, request_options).await,
+      };
+
+      let response = response.expect("fatal: Couldn't fetch the URL");
       RetchResponse::from(response).await
     }
 }
