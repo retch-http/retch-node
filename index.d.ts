@@ -13,7 +13,7 @@ export interface RetcherOptions {
   vanillaFallback?: boolean
   proxyUrl?: string
 }
-export declare class NapiResponseWrapper {
+export declare class RetchResponse {
   status: number
   statusText: string
   headers: Record<string, string>
@@ -22,7 +22,8 @@ export declare class NapiResponseWrapper {
   text(): string
   json(): any
 }
-export declare class NodeRetcherWrapper {
+export type RetcherWrapper = Retcher
+export declare class Retcher {
   constructor(options: RetcherOptions)
-  fetch(url: string): Promise<NapiResponseWrapper>
+  fetch(url: string): Promise<RetchResponse>
 }

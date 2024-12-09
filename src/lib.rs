@@ -5,8 +5,6 @@ use reqwest::Response;
 use retch::retcher::{ Retcher, RetcherConfig};
 use napi_derive::napi;
 
-
-
 #[napi]
 pub enum Browser {
   Chrome,
@@ -50,7 +48,7 @@ impl Into<RetcherConfig> for RetcherOptions {
 }
 
 #[napi]
-struct NapiResponseWrapper {
+struct RetchResponse {
   bytes: Vec<u8>,
   pub status: u16,
   pub status_text: String,
@@ -59,7 +57,7 @@ struct NapiResponseWrapper {
 }
 
 #[napi]
-impl NapiResponseWrapper {
+impl RetchResponse {
   async fn from(response: Response) -> Self {
     let status = response.status().as_u16();
     let status_text = response.status().canonical_reason().unwrap_or("").to_string();
@@ -101,13 +99,13 @@ impl NapiResponseWrapper {
   }
 }
 
-#[napi]
-struct NodeRetcherWrapper {
+#[napi(js_name="Retcher")]
+pub struct RetcherWrapper {
   inner: Retcher,
 }
 
 #[napi]
-impl NodeRetcherWrapper {
+impl RetcherWrapper {
     #[napi(constructor)]
     pub fn new(options: RetcherOptions) -> Self {
       let config: RetcherConfig = options.into();
@@ -117,10 +115,10 @@ impl NodeRetcherWrapper {
     }
 
     #[napi]
-    pub async fn fetch(&self, url: String) -> NapiResponseWrapper {
+    pub async fn fetch(&self, url: String) -> RetchResponse {
       let response = self.inner.get(url, None).await.unwrap();
       
-      NapiResponseWrapper::from(response).await
+      RetchResponse::from(response).await
     }
 }
 

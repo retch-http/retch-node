@@ -310,8 +310,8 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { Browser, NapiResponseWrapper, NodeRetcherWrapper } = nativeBinding
+const { Browser, RetchResponse, Retcher } = nativeBinding
 
 module.exports.Browser = Browser
-module.exports.NapiResponseWrapper = NapiResponseWrapper
-module.exports.NodeRetcherWrapper = NodeRetcherWrapper
+module.exports.RetchResponse = RetchResponse
+module.exports.Retcher = Retcher

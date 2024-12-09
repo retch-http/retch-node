@@ -1,9 +1,9 @@
 import test from 'ava'
 
-import { NodeRetcherWrapper } from '../index.js'
+import { Retcher } from '../index.js'
 
 test('retcher works', async (t) => {
-  const retcher = new NodeRetcherWrapper({});
+  const retcher = new Retcher({});
 
   const response = await retcher.fetch('https://jindrich.bar');
 
@@ -12,7 +12,7 @@ test('retcher works', async (t) => {
 })
 
 test('json method works', async (t) => {
-  const retcher = new NodeRetcherWrapper({});
+  const retcher = new Retcher({});
 
   const response = await retcher.fetch('http://httpbin.org/json');
 
