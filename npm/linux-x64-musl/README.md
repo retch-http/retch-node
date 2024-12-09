@@ -1,3 +1,3 @@
-# `retch-linux-x64-musl`
+# `retch-http-linux-x64-musl`
 
-This is the **x86_64-unknown-linux-musl** binary for `retch`
+This is the **x86_64-unknown-linux-musl** binary for `retch-http`

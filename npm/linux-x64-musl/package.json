@@ -1,5 +1,5 @@
 {
-  "name": "retch-linux-x64-musl",
+  "name": "retch-http-linux-x64-musl",
   "version": "0.1.0",
   "repository": {
     "url": "https://github.com/retch-http/retch-node"
@@ -10,9 +10,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "retch.linux-x64-musl.node",
+  "main": "retch-http.linux-x64-musl.node",
   "files": [
-    "retch.linux-x64-musl.node"
+    "retch-http.linux-x64-musl.node"
   ],
   "license": "MIT",
   "engines": {
