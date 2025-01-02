@@ -310,9 +310,9 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { Browser, RetchResponse, Retcher, HttpMethod } = nativeBinding
+const { RetchResponse, HttpMethod, Browser, Retcher } = nativeBinding
 
-module.exports.Browser = Browser
 module.exports.RetchResponse = RetchResponse
-module.exports.Retcher = Retcher
 module.exports.HttpMethod = HttpMethod
+module.exports.Browser = Browser
+module.exports.Retcher = Retcher
