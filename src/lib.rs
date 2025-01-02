@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-
-use retch::retcher::{ RequestOptions, Retcher, RetcherConfig};
+use retch::retcher::{RequestOptions, Retcher, RetcherConfig};
 use napi_derive::napi;
 
 mod response;
+mod request;
 
 use self::response::RetchResponse;
 
@@ -53,27 +52,6 @@ impl Into<RetcherConfig> for RetcherOptions {
 #[napi(js_name="Retcher")]
 pub struct RetcherWrapper {
   inner: Retcher,
-}
-
-#[derive(Default)]
-#[napi(string_enum)]
-pub enum HttpMethod {
-  #[default]
-  GET,
-  POST,
-  PUT,
-  DELETE,
-  PATCH,
-  HEAD,
-  OPTIONS,
-}
-
-#[derive(Default)]
-#[napi(object)]
-pub struct RequestInit {
-  pub method: Option<HttpMethod>,
-  pub headers: Option<HashMap<String, String>>,
-  pub body: Option<Vec<u8>>,
 }
 
 #[napi]
