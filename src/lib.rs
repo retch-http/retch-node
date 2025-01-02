@@ -1,4 +1,6 @@
-use retch::retcher::{RequestOptions, Retcher, RetcherConfig};
+use std::time::Duration;
+
+use retch::{retcher::{Retcher, RetcherBuilder}, RequestOptions};
 use napi_derive::napi;
 
 mod response;
@@ -19,7 +21,7 @@ pub struct RetcherWrapper {
 impl RetcherWrapper {
     #[napi(constructor)]
     pub fn new(options: Option<RetcherOptions>) -> Self {
-      let config: RetcherConfig = options.unwrap_or_default().into();
+      let config: RetcherBuilder = options.unwrap_or_default().into();
 
       Self {
         inner: config.build(),
@@ -27,9 +29,11 @@ impl RetcherWrapper {
     }
 
     #[napi]
-    pub async fn fetch(&self, url: String, request_init: Option<RequestInit>) -> RetchResponse {
+    pub async unsafe fn fetch(&mut self, url: String, request_init: Option<RequestInit>) -> RetchResponse {
       let request_options = Some(RequestOptions {
         headers: request_init.as_ref().and_then(|init| init.headers.as_ref()).cloned().unwrap_or_default(),
+        timeout: if let Some(timeout) = request_init.as_ref().and_then(|init| init.timeout) { Some(Duration::from_millis(timeout.into())) } else { None },
+        ..RequestOptions::default()
       });
 
       let body = request_init.as_ref().and_then(|init| init.body.as_ref()).cloned();

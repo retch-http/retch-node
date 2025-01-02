@@ -5,7 +5,7 @@ use napi_derive::napi;
 use reqwest::Response;
 
 #[napi]
-pub(crate) struct RetchResponse {
+pub struct RetchResponse {
   bytes: Vec<u8>,
   pub status: u16,
   pub status_text: String,
