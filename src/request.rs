@@ -20,4 +20,6 @@ pub struct RequestInit {
   pub method: Option<HttpMethod>,
   pub headers: Option<HashMap<String, String>>,
   pub body: Option<Vec<u8>>,
+  /// Request timeout in milliseconds. Overrides the Retcher-wide timeout option.
+  pub timeout: Option<u32>,
 }

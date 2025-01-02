@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use retch::{retcher::{Retcher, RetcherBuilder}, RequestOptions};
 use napi_derive::napi;
 
@@ -30,6 +32,7 @@ impl RetcherWrapper {
     pub async unsafe fn fetch(&mut self, url: String, request_init: Option<RequestInit>) -> RetchResponse {
       let request_options = Some(RequestOptions {
         headers: request_init.as_ref().and_then(|init| init.headers.as_ref()).cloned().unwrap_or_default(),
+        timeout: if let Some(timeout) = request_init.as_ref().and_then(|init| init.timeout) { Some(Duration::from_millis(timeout.into())) } else { None },
         ..RequestOptions::default()
       });
 

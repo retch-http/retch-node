@@ -16,6 +16,7 @@ export interface RequestInit {
   method?: HttpMethod
   headers?: Record<string, string>
   body?: Array<number>
+  timeout?: number
 }
 export const enum Browser {
   Chrome = 'Chrome',
