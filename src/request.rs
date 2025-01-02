@@ -22,4 +22,6 @@ pub struct RequestInit {
   pub body: Option<Vec<u8>>,
   /// Request timeout in milliseconds. Overrides the Retcher-wide timeout option.
   pub timeout: Option<u32>,
+  /// Force the request to use HTTP/3. If the server doesn't expect HTTP/3, the request will fail.
+  pub force_http3: Option<bool>,
 }

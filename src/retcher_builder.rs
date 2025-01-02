@@ -27,6 +27,8 @@ pub struct RetcherOptions {
   pub proxy_url: Option<String>,
   /// Default timeout for this Retcher instance in milliseconds.
   pub timeout: Option<u32>,
+  /// Enable HTTP/3 support.
+  pub http3: Option<bool>,
 }
 
 impl Into<RetcherBuilder> for RetcherOptions {
@@ -46,6 +48,11 @@ impl Into<RetcherBuilder> for RetcherOptions {
     }
     if let Some(timeout) = self.timeout {
       config = config.with_default_timeout(Duration::from_millis(timeout.into()));
+    }
+    if let Some(http3) = self.http3 {
+      if http3 {
+        config = config.with_http3();
+      }
     }
     config
   }
