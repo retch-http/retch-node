@@ -1,6 +1,6 @@
 {
   "name": "retch-http",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
@@ -8,8 +8,6 @@
     "triples": {
       "additional": [
         "aarch64-apple-darwin",
-        "aarch64-unknown-linux-gnu",
-        "aarch64-unknown-linux-musl",
         "aarch64-pc-windows-msvc",
         "x86_64-unknown-linux-musl"
       ]
