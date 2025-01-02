@@ -16,7 +16,10 @@ export interface RequestInit {
   method?: HttpMethod
   headers?: Record<string, string>
   body?: Array<number>
+  /** Request timeout in milliseconds. Overrides the Retcher-wide timeout option. */
   timeout?: number
+  /** Force the request to use HTTP/3. If the server doesn't expect HTTP/3, the request will fail. */
+  forceHttp3?: boolean
 }
 export const enum Browser {
   Chrome = 'Chrome',
@@ -29,6 +32,8 @@ export interface RetcherOptions {
   proxyUrl?: string
   /** Default timeout for this Retcher instance in milliseconds. */
   timeout?: number
+  /** Enable HTTP/3 support. */
+  http3?: boolean
 }
 export declare class RetchResponse {
   status: number
