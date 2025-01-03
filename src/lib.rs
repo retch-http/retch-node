@@ -7,7 +7,7 @@ mod response;
 mod request;
 mod retcher_builder;
 
-use request::{HttpMethod, RequestInit};
+use request::{serialize_body, HttpMethod, RequestInit};
 use retcher_builder::RetcherOptions;
 use self::response::RetchResponse;
 
@@ -37,6 +37,11 @@ impl RetcherWrapper {
       });
 
       let body = request_init.as_ref().and_then(|init| init.body.as_ref()).cloned();
+
+      let body: Option<Vec<u8>> = match body {
+        Some(body) => Some(serialize_body(body)),
+        None => None,
+      };
 
       let response = match request_init.unwrap_or_default().method.unwrap_or_default() {
         HttpMethod::GET => self.inner.get(url, request_options).await,
