@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use retch::{retcher::{Retcher, RetcherBuilder}, RequestOptions};
+use retch::{retcher::{ErrorType, Retcher, RetcherBuilder}, RequestOptions};
 use napi_derive::napi;
 
 mod response;
@@ -29,7 +29,7 @@ impl RetcherWrapper {
     }
 
     #[napi]
-    pub async unsafe fn fetch(&mut self, url: String, request_init: Option<RequestInit>) -> RetchResponse {
+    pub async unsafe fn fetch(&mut self, url: String, request_init: Option<RequestInit>) -> Result<RetchResponse, napi::Error> {
       let request_options = Some(RequestOptions {
         headers: request_init.as_ref().and_then(|init| init.headers.as_ref()).cloned().unwrap_or_default(),
         timeout: if let Some(timeout) = request_init.as_ref().and_then(|init| init.timeout) { Some(Duration::from_millis(timeout.into())) } else { None },
@@ -48,8 +48,21 @@ impl RetcherWrapper {
         HttpMethod::OPTIONS => self.inner.options(url, request_options).await,
       };
 
-      let response = response.expect("fatal: Couldn't fetch the URL");
-      RetchResponse::from(response).await
+      match response {
+        Ok(response) => Ok(RetchResponse::from(response).await),
+        Err(err) => {
+          let status = match err {
+            ErrorType::UrlMissingHostnameError => napi::Status::InvalidArg,
+            ErrorType::UrlProtocolError => napi::Status::InvalidArg,
+            ErrorType::UrlParsingError => napi::Status::InvalidArg,
+            ErrorType::ImpersonationError => napi::Status::GenericFailure,
+            ErrorType::RequestError(_) => napi::Status::GenericFailure,
+            ErrorType::ResponseError => napi::Status::GenericFailure,
+          };
+          let reason = format!("{:#?}", err);
+          Err(napi::Error::new(status, reason))
+        }
+      }
     }
 }
 
