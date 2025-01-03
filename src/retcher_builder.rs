@@ -61,14 +61,13 @@ impl Into<RetcherBuilder> for RetcherOptions {
       }
     }
 
+    let follow_redirects: bool = self.follow_redirects.unwrap_or(true);
     let max_redirects: usize = self.max_redirects.unwrap_or(10).try_into().unwrap();
 
-    if let Some(follow_redirects) = self.follow_redirects {
-      if follow_redirects {
-        config = config.with_redirect(retch::retcher::RedirectBehavior::FollowRedirect(max_redirects));
-      }
-    } else {
+    if !follow_redirects {
       config = config.with_redirect(retch::retcher::RedirectBehavior::ManualRedirect);
+    } else {
+      config = config.with_redirect(retch::retcher::RedirectBehavior::FollowRedirect(max_redirects));
     }
 
     config
