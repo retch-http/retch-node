@@ -27,19 +27,33 @@ test('headers work', async (t) => {
   json.headers['Retch-Test'] ? t.pass() : t.fail();
 })
 
-test('request body works', async (t) => {
+test('string request body works', async (t) => {
   const response = await retcher.fetch(
     'https://httpbin.org/post', 
     { 
       method: 'POST',
-      body: [...new TextEncoder().encode('{"Retch-Test":"foořžš"}')],
+      body: '{"Retch-Test":"foořžš"}',
       headers: { 'Content-Type': 'application/json' }
     }
   );
   const json = await response.json();
 
   json.data === '{"Retch-Test":"foořžš"}' ? t.pass() : t.fail();
-})
+});
+
+test('binary request body works', async (t) => {
+  const response = await retcher.fetch(
+    'https://httpbin.org/post', 
+    { 
+      method: 'POST',
+      body: Uint8Array.from([0x52, 0x65, 0x74, 0x63, 0x68, 0x2d, 0x54, 0x65, 0x73, 0x74, 0x3a, 0x66, 0x6f, 0x6f, 0xc5, 0x99, 0xc5, 0xbe, 0xc5, 0xa1]),
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
+  const json = await response.json();
+
+  t.deepEqual(json.data, 'Retch-Test:foořžš');
+});
 
 test('redirects work by default', async (t) => {
   const response = await retcher.fetch(

@@ -15,7 +15,7 @@ export const enum HttpMethod {
 export interface RequestInit {
   method?: HttpMethod
   headers?: Record<string, string>
-  body?: Array<number>
+  body?: string | Buffer
   /** Request timeout in milliseconds. Overrides the Retcher-wide timeout option. */
   timeout?: number
   /** Force the request to use HTTP/3. If the server doesn't expect HTTP/3, the request will fail. */
