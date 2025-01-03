@@ -1,6 +1,6 @@
 {
   "name": "retch-http-darwin-arm64",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "repository": {
     "url": "https://github.com/retch-http/retch-node"
   },
