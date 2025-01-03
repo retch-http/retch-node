@@ -29,6 +29,12 @@ pub struct RetcherOptions {
   pub timeout: Option<u32>,
   /// Enable HTTP/3 support.
   pub http3: Option<bool>,
+  /// Follow redirects.
+  pub follow_redirects: Option<bool>,
+  /// Maximum number of redirects to follow. Default is `10`.
+  /// 
+  /// If this number is exceeded, the request will be rejected with an error.
+  pub max_redirects: Option<u32>,
 }
 
 impl Into<RetcherBuilder> for RetcherOptions {
@@ -54,6 +60,16 @@ impl Into<RetcherBuilder> for RetcherOptions {
         config = config.with_http3();
       }
     }
+
+    let follow_redirects: bool = self.follow_redirects.unwrap_or(true);
+    let max_redirects: usize = self.max_redirects.unwrap_or(10).try_into().unwrap();
+
+    if !follow_redirects {
+      config = config.with_redirect(retch::retcher::RedirectBehavior::ManualRedirect);
+    } else {
+      config = config.with_redirect(retch::retcher::RedirectBehavior::FollowRedirect(max_redirects));
+    }
+
     config
   }
 }

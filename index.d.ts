@@ -34,6 +34,14 @@ export interface RetcherOptions {
   timeout?: number
   /** Enable HTTP/3 support. */
   http3?: boolean
+  /** Follow redirects. */
+  followRedirects?: boolean
+  /**
+   * Maximum number of redirects to follow. Default is `10`.
+   *
+   * If this number is exceeded, the request will be rejected with an error.
+   */
+  maxRedirects?: number
 }
 export declare class RetchResponse {
   status: number
