@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use napi::{bindgen_prelude::Buffer, Env, JsFunction, JsObject, JsString, JsUnknown};
 use napi_derive::napi;
 use reqwest::Response;
+use retch::utils::{decode, ContentType};
 
 #[napi]
 pub struct RetchResponse {
@@ -38,8 +39,16 @@ impl RetchResponse {
 
   #[napi]
   pub fn text(&self) -> String {
-    // Support non-UTF-8 encodings (from the content-type header, the http-equiv meta tag, etc.)
-    String::from_utf8_lossy(&self.bytes).to_string()
+    let content_type_header = self.headers.get("content-type");
+
+    decode(&self.bytes, content_type_header.and_then(|ct| {
+      let parsed = ContentType::from(ct);
+
+      return match parsed {
+        Ok(ct) => ct.into(),
+        Err(_) => None,
+      }
+    }))
   }
 
   #[napi(ts_return_type="any")]
