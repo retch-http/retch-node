@@ -20,7 +20,12 @@ test('json method works', async (t) => {
 test('headers work', async (t) => {
   const response = await retcher.fetch(
     'https://httpbin.org/headers', 
-    { headers: { 'Retch-Test': 'foo' } }
+    { 
+      headers: { 
+        'Retch-Test': 'foo',
+        'Cookie': 'test=123; test2=456'
+      } 
+    }
   );
   const json = await response.json();
 
