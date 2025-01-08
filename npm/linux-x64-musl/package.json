@@ -1,6 +1,6 @@
 {
   "name": "retch-http-linux-x64-musl",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "repository": {
     "url": "https://github.com/retch-http/retch-node"
   },
