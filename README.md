@@ -1,8 +1,8 @@
-# `retch-http`, Node.JS bindings for Retch
+# `retch-http`, Node.js bindings for Retch
 
-`retch-http` is a Node.JS module that provides bindings for the [Retch](https://github.com/retch-http/retch) library.
+`retch-http` is a Node.js module that provides bindings for the [Retch](https://github.com/retch-http/retch) library.
 
-It allows you to switch the TLS fingerprints and the HTTP headers of your requests, while still using the same API as the built-in (since Node.JS 18) `fetch` function.
+It allows you to switch the TLS fingerprints and the HTTP headers of your requests, while still using the same API as the built-in (since Node.js 18) `fetch` function.
 
 ## Installation
 
