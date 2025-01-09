@@ -43,6 +43,7 @@ jobs:
             # The paths to the linked objects in the alpine image are a bit different 
             #   => this maps them to the correct location where the linker expects them
             build: |
+              corepack enable &&
               apk add perl &&
               ln -s /usr/lib/gcc/x86_64-alpine-linux-musl/14.2.0/crtbeginS.o /usr/lib/crtbeginS.o &&
               ln -s /usr/lib/gcc/x86_64-alpine-linux-musl/14.2.0/crtendS.o /usr/lib/crtendS.o &&
